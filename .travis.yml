@@ -1,0 +1,32 @@
+language: julia
+os:
+  - linux
+julia:
+  - 1.0
+notifications:
+  email: false
+git:
+  depth: 99999999
+cache:
+  timeout: 1000
+  directories:
+    - downloads
+env:
+  global:
+    - BINARYBUILDER_DOWNLOADS_CACHE=downloads
+    - BINARYBUILDER_AUTOMATIC_APPLE=true
+sudo: required
+before_script:
+  - julia -e 'using Pkg; pkg"add BinaryProvider"; pkg"add BinaryBuilder#master"; Pkg.build()'
+script:
+  - julia  --color=yes build_tarballs.jl
+deploy:
+  provider: releases
+  api_key:
+    secure: RqKw1mJ5Q/R/J8tu0Aw11NYsl3aUs0fQ55aYZiTvXFRCBh2ZyqnRb2FyJB0HPiAnmOVzz4Ojgp/Hu7ycbexJG5du1ook6YEQMZnIIPqLuS9W3pCcs7/ft41o0y+aqueK52xNIJv1/kzmpvA+w2dP6JiYOLwtyxhW9XyGljl7qxeGfOqfv9sHqW6qcl59Hkc7w2REtIegAKYcPQl/WxHy2vGUXVkXj2ffY9sVXnH38KV0FA8j5Fq5wPqsYG5dTlfco/bosiw9qh5vffCfbATVn7P/UbzxAew0Q4K2jJJ1JmUmuuxO4lgDZlcLcPmdGa7dkzmVaH4e6uuhVgEwBsGbhjfQzf7vceIyUNCF8euSkN3RoVv/A8OYwXLuljOj+9e8ujGlQwcWbNyTwxR3I39q060eaj6BAPoJCCq60beesWnG/nHhHXN5GCZ6zODidVUWfZfq1vkaBYQh9fkBIoHCBPdtKTM02R0WHAtEbF9yPzBm3s9m7bjEZ7XUhWpv5HQdTFADl3SUFe5IwF14dr6OozKTc9Np2oW8MX+lFkOgz8xo0IvRFv+ZseoyNDe5kF3/C9x7hgrb9CYOlIvtSeUyoual/15gNP4yx9GQQW4JktAh7TZ0SRdF4bdCh3NfiblEDukbF6uvTdJT8YtIRk+tUFhLqB88eTSpIPRc61FH0LA=
+  file_glob: true
+  file: products/*
+  skip_cleanup: true
+  on:
+    repo: benlorenz/cddlibBuilder
+    tags: true
